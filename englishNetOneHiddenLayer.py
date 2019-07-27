@@ -80,130 +80,224 @@ def backPropInput(passBack, saveWeights, outLayerProp):
             temp.append(outLayerProp[x].weights[y] - float(outLayerProp[x].inputLayer[y]) * adjust)
         outLayerProp[x].weights = temp
 
-#initialize some inputs
-train = convertToVector(engLib.read(), 15) #write the txt file into an array
-trainOut = answers.read() #write answers that correspond to txt file into array
-iterations = 1 #set number of iterations
-#initialize base average weights for hidden, then output layers
-averageWeights = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
-averageOut = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-learnRate = 5 #set learning rate, play around to alter results
-repeats = 200 #set amount of times to repeat on the training set
+def prediction (train, trainOut, averageWeights, averageOut):
+    # displays the percentage of test data guessed correctly
+    correct = 0
+    print("accuracy in guessing training data:")
+    for examples in range(len(train)):
+        guessLayer = makeLayer(train[examples], averageWeights, 10)
+        guess = outNeuron(guessLayer, averageOut)
+        if (int(round(guess.output)) == int(trainOut[examples])):
+            correct = correct + 1
+    print(correct / len(train) * 100)
 
-testWeights = initWeights(390, 10) # change word length as fit
-#print(testWeights[0])
-testOutWeights = initWeights(10, 1)
-#print (testOutWeights)
+def training (iterations, learnRate, repeats, testWeights, testOutWeights, averageWeights, averageOut):
+    # initialize some inputs
+    train = convertToVector(engLib.read(), 15)  # write the txt file into an array
+    trainOut = answers.read()  # write answers that correspond to txt file into array
+    # init end weights
+    for i in range(10):
+        zeroes = [0] * 390
+        averageWeights.append(zeroes)
+        averageOut.append(0)
 
+    # init layers
+    outputs = []
+    outputNeuron = None
 
-#the training process
-for repeat in range (repeats):
-    print("EPOCH NUMBER: ")
-    print(repeat)
-    print("Words processed:")
-    for word in range (len(train)): #loops through each word in the sample list
-        print("-------------------------------------------------------------")
-        print(len (testWeights[0]))
-        print(len (train[word]))
-        for iterate in range (iterations): #iterates each word an amount of time specified by iterations
-            #the forwards feed
-            outputs = makeLayer(train[word], testWeights, 10) #make the hidden layer of 10 neurons
+    # the training process
+    for repeat in range(repeats):
+        print("EPOCH NUMBER: ")
+        print(repeat)
+        print("Words processed:")
+        for word in range(len(train)):  # loops through each word in the sample list
+            print("-------------------------------------------------------------")
+            print(len(testWeights[0]))
+            print(len(train[word]))
 
-            outputNeuron = outNeuron(outputs, testOutWeights[0]) #make the output neuron, contains the guess as well
+            for iterate in range(iterations):  # iterates each word an amount of time specified by iterations
+                # the forwards feed
+                outputs = makeLayer(train[word], testWeights, 10)  # make the hidden layer of 10 neurons
 
-            #print(outputNeuron.output)
+                outputNeuron = outNeuron(outputs, testOutWeights[0])  # make the output neuron, contains the guess as well
 
-            #the backwards pass
-            saveWeights = copy.deepcopy(outputNeuron.weights) #keep a copy of old weights to use for hidden layer propogation
-            passBack = backPropOut(float(trainOut[word]), outputNeuron) #back-propogate through the output neuron, weights are updated
+                # print(outputNeuron.output)
 
-            backPropInput(passBack, saveWeights, outputs) #back-propogate through the hidden layer, weights are updated
+                # the backwards pass
+                saveWeights = copy.deepcopy(outputNeuron.weights)  # keep a copy of old weights to use for hidden layer propogation
+                passBack = backPropOut(float(trainOut[word]), outputNeuron)  # back-propogate through the output neuron, weights are updated
+                backPropInput(passBack, saveWeights, outputs)  # back-propogate through the hidden layer, weights are updated
 
-            #updating input weights for use in next iteration
-            testWeights = []
-            for update in range (len (outputs)):
-                testWeights.append(outputs[update].weights)
-            testOutWeights = [outputNeuron.weights]
+                # updating input weights for use in next iteration
+                testWeights = []
+                for update in range(len(outputs)):
+                    testWeights.append(outputs[update].weights)
+                testOutWeights = [outputNeuron.weights]
 
-        #print("altered hidden layer weights:") #prints out the hidden layer's weights for current word
-        #print(outputs[0].weights)
-        #print(outputs[1].weights)
-        #print(outputs[2].weights)
-        #print(outputs[3].weights)
-        #print(outputs[4].weights)
-        #print(outputs[5].weights)
-        #print(outputs[6].weights)
-        #print(outputs[7].weights)
-        #print(outputs[8].weights)
-        #print(outputs[9].weights)
-        #print("altered output weights:") #prints out the output neuron's weights for current word
-        #print(outputNeuron.weights)
-        print(word)
+            # print("altered hidden layer weights:") #prints out the hidden layer's weights for current word
+            # print(outputs[0].weights)
+            # print(outputs[1].weights)
+            # print(outputs[2].weights)
+            # print(outputs[3].weights)
+            # print(outputs[4].weights)
+            # print(outputs[5].weights)
+            # print(outputs[6].weights)
+            # print(outputs[7].weights)
+            # print(outputs[8].weights)
+            # print(outputs[9].weights)
+            # print("altered output weights:") #prints out the output neuron's weights for current word
+            # print(outputNeuron.weights)
+            print(word)
 
-        #constructs a sum of all the weights for the words in the bank
-        for neurons in range (len (outputs)):
-            for weights in range (len (outputs[neurons].weights)):
-                averageWeights[neurons][weights] += outputs[neurons].weights[weights] #adds current hidden layer weights to the sum of previous weights
-        for outWeights in range (len (outputNeuron.weights)):
-            averageOut[outWeights] += outputNeuron.weights[outWeights] #adds current output neuron weights to the sum of previous weights
+            # constructs a sum of all the weights for the words in the bank
+            for neurons in range(len(outputs)):
+                for weights in range(len(outputs[neurons].weights)):
+                    averageWeights[neurons][weights] += outputs[neurons].weights[weights]  # adds current hidden layer weights to the sum of previous weights
+            for outWeights in range(len(outputNeuron.weights)):
+                averageOut[outWeights] += outputNeuron.weights[outWeights]  # adds current output neuron weights to the sum of previous weights
 
-print("summed hidden layer weights:") #display resulted summed weights for the hidden layer after training
-print(averageWeights[0])
-print(averageWeights[1])
-print(averageWeights[2])
-print(averageWeights[3])
-print(averageWeights[4])
-print(averageWeights[5])
-print(averageWeights[6])
-print(averageWeights[7])
-print(averageWeights[8])
-print(averageWeights[9])
-print("summed output weights:") #display resulted summed weights for output neuron post training
-print(averageOut)
+    print("summed hidden layer weights:")  # display resulted summed weights for the hidden layer after training
+    print(averageWeights[0])
+    print(averageWeights[1])
+    print(averageWeights[2])
+    print(averageWeights[3])
+    print(averageWeights[4])
+    print(averageWeights[5])
+    print(averageWeights[6])
+    print(averageWeights[7])
+    print(averageWeights[8])
+    print(averageWeights[9])
+    print("summed output weights:")  # display resulted summed weights for output neuron post training
+    print(averageOut)
 
+    # averages each weight by total amount of test words
+    for neurons in range(len(averageWeights)):
+        for weights in range(len(averageWeights[neurons])):
+            averageWeights[neurons][weights] = learnRate * averageWeights[neurons][weights] / (len(train) * repeats)  # for hidden layer
+    for outWeights in range(len(averageOut)):
+        averageOut[outWeights] = learnRate * averageOut[outWeights] / (len(train) * repeats)  # for output neuron
 
-#averages each weight by total amount of test words
-for neurons in range (len (outputs)):
-    for weights in range (len(averageWeights[neurons])):
-        averageWeights[neurons][weights] = learnRate * averageWeights[neurons][weights] / (len (train) * repeats)#for hidden layer
-for outWeights in range (len (averageOut)):
-    averageOut[outWeights] = learnRate * averageOut[outWeights] / (len (train) * repeats)#for output neuron
+    prediction (train, trainOut, averageWeights, averageOut)
 
-#display resulted averaged weights
-print("averaged hidden layer weights:") #for hidden layer
-print(averageWeights[0])
-print(averageWeights[1])
-print(averageWeights[2])
-print(averageWeights[3])
-print(averageWeights[4])
-print(averageWeights[5])
-print(averageWeights[6])
-print(averageWeights[7])
-print(averageWeights[8])
-print(averageWeights[9])
-print("averaged output weights:") #for output neuron
-print(averageOut)
+    # display resulted averaged weights
+    print("averaged hidden layer weights:")  # for hidden layer
+    print(averageWeights[0])
+    print(averageWeights[1])
+    print(averageWeights[2])
+    print(averageWeights[3])
+    print(averageWeights[4])
+    print(averageWeights[5])
+    print(averageWeights[6])
+    print(averageWeights[7])
+    print(averageWeights[8])
+    print(averageWeights[9])
+    print("averaged output weights:")  # for output neuron
+    print(averageOut)
 
-#displays the percentage of test data guessed correctly
-correct = 0
-print("accuracy in guessing training data:")
-for examples in range (len(train)):
-    guessLayer = makeLayer (train[examples], averageWeights, 10)
-    guess = outNeuron (guessLayer, averageOut)
-    if (int(round(guess.output)) == int(trainOut[examples])):
-        correct = correct + 1
-print(correct/len(train) * 100)
+if __name__ == '__main__':
+    loadWeights = input("Load weights? y/n: ")
 
-#prompt user to give the net words to guess
-while True:
-    word = input("Word: ")
-    word = convertToVector(word, maxLength)
-    guessLayer = makeLayer (word[0], averageWeights, 10)
-    guess = outNeuron (guessLayer, averageOut)
-    print(guess.output)
+    # init weight holders
+    averageWeights = []
+    averageOut = []
 
-#SUCCESS! NOTE, BY INCREASING THE EPOCHS OF THE NEURAL NET AND DECREASING THE AMOUNT OF ITERATIONS,
-#THE ACCURACY IN GUESSING HAS GONE UP BY 30% FROM 65% TO 95%. I WILL KEEP THIS IN MIND FOR FUTURE IMPLEMENTATIONS
+    # train fresh
+    if (loadWeights == "n"):
+
+        iterations = 1  # set number of iterations
+        # initialize base average weights for hidden, then output layers
+        learnRate = 1  # set learning rate, play around to alter results
+        repeats = 400  # set amount of times to repeat on the training set (epochs)
+
+        testWeights = initWeights(390, 10)  # change word length as fit
+        # print(testWeights[0])
+        testOutWeights = initWeights(10, 1)
+        # print (testOutWeights)
+        training(iterations, learnRate, repeats, testWeights, testOutWeights, averageWeights, averageOut)
+
+    # load preexisting weights
+    else:
+        weightFile = open("layerOneWeights.txt", "r").read()
+        loadWeights = []
+        for weightSet in weightFile.split("\n"):
+            wSet = []
+            for weights in weightSet.split():
+                wSet.append(float(weights))
+            loadWeights.append(wSet)
+        loadOut = []
+        outWeightFile = open("outLayerWeights.txt", "r").read()
+        for weights in outWeightFile.split():
+            loadOut.append(float(weights))
+
+        #display resulted averaged weights
+        print("averaged hidden layer weights:") #for hidden layer
+        print(loadWeights[0])
+        print(loadWeights[1])
+        print(loadWeights[2])
+        print(loadWeights[3])
+        print(loadWeights[4])
+        print(loadWeights[5])
+        print(loadWeights[6])
+        print(loadWeights[7])
+        print(loadWeights[8])
+        print(loadWeights[9])
+        print("averaged output weights:") #for output neuron
+        print(loadOut)
+
+        predict = input("Make prediction? y/n: ")
+        if (predict == "y"):
+            toPredict = input("Read data from which file? ")
+            truth = input("Check against which file? ")
+            data = open(toPredict, "r")
+            answer = open(truth, "r")
+            predictExamples = convertToVector(data.read(), 15)
+            prediction(predictExamples, answer.read(), loadWeights, loadOut)
+
+        keepTraining = input("Continue training? y/n: ")
+        if (keepTraining == "y"):
+            iterations = int(input("Iterations: "))
+            learnRate = int(input("Learning rate: "))
+            repeats = int(input("Epochs: "))
+            training(iterations, learnRate, repeats, loadWeights, [loadOut], averageWeights, averageOut)
+
+    #prompt user to give the net words to guess
+    while True:
+        word = input("Word: ")
+        if (word == "SW"):
+            weightFile = open("layerOneWeights.txt", "w+")
+            for i in range (len (averageWeights)):
+                for j in range (len (averageWeights[i])):
+                    weightFile.write(str(averageWeights[i][j]))
+                    weightFile.write(" ")
+                weightFile.write("\n")
+            weightFile.close()
+            outWeightFile = open ("outLayerWeights.txt", "w+")
+            for i in range (len (averageOut)):
+                outWeightFile.write(str(averageOut[i]))
+                outWeightFile.write(" ")
+            outWeightFile.close()
+            continue
+        word = convertToVector(word, maxLength)
+        guessLayer = makeLayer (word[0], averageWeights, 10)
+        guess = outNeuron (guessLayer, averageOut)
+        print(guess.output)
+
+# SUCCESS! NOTE, BY INCREASING THE EPOCHS OF THE NEURAL NET AND DECREASING THE AMOUNT OF ITERATIONS,
+# THE ACCURACY IN GUESSING HAS GONE UP BY 30% FROM 65% TO 95%. I WILL KEEP THIS IN MIND FOR FUTURE IMPLEMENTATIONS
+
+# increasing training data -> lower accuracy
+# 2000 with 200 -> 98.75% (5 learnRate) 99.55% (1 learnRate)
+    # 2000 with 100 -> 95.75% (5 learnRate) 96.8 (1 learnRate)
+    # 2000 with 400 -> 99.25%
+# 3000 with 200 -> 94%
+# 7000 with 200 -> 77%
+    # 7000 with 100 -> 76.94% (5 learnRate) 75.5% (1 learnRate)
+    # 7000 with 400 -> 80%
+    # additional 400 on top of last 7000 -> 83.8%
+
+# NEW 7000 training set, less obscure words
+    # 400 -> 86% + 400 -> 88.6%
+
     
 
     
