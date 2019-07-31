@@ -5,14 +5,20 @@ As of July 28, 2018, the current implementation limits the training speed, and t
 
 Some results:
 
- increasing training data -> lower accuracy
  2000 with 200 -> 98.75% (5 learnRate) 99.55% (1 learnRate)
+ 
      2000 with 100 -> 95.75% (5 learnRate) 96.8 (1 learnRate)
+     
      2000 with 400 -> 99.25%
+     
  3000 with 200 -> 94%
+ 
  7000 with 200 -> 77%
+ 
      7000 with 100 -> 76.94% (5 learnRate) 75.5% (1 learnRate)
+     
      7000 with 400 -> 80%
+     
      additional 400 on top of the previous 80% -> 83.8%
 
  NEW 7000 training set, less obscure words
