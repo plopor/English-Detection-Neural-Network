@@ -195,14 +195,16 @@ def training (iterations, learnRate, repeats, testWeights, testOutWeights, avera
     print(averageOut)
 
 if __name__ == '__main__':
-    loadWeights = input("Load weights? y/n: ")
+    load = input("Load weights? y/n: ")
 
     # init weight holders
     averageWeights = []
+    loadWeights = []
     averageOut = []
+    loadOut = []
 
     # train fresh
-    if (loadWeights == "n"):
+    if (load == "n"):
 
         iterations = 1  # set number of iterations
         # initialize base average weights for hidden, then output layers
@@ -218,13 +220,11 @@ if __name__ == '__main__':
     # load preexisting weights
     else:
         weightFile = open("layerOneWeights.txt", "r").read()
-        loadWeights = []
         for weightSet in weightFile.split("\n"):
             wSet = []
             for weights in weightSet.split():
                 wSet.append(float(weights))
             loadWeights.append(wSet)
-        loadOut = []
         outWeightFile = open("outLayerWeights.txt", "r").read()
         for weights in outWeightFile.split():
             loadOut.append(float(weights))
@@ -278,8 +278,12 @@ if __name__ == '__main__':
             outWeightFile.close()
             continue
         word = convertToVector(word, maxLength)
-        guessLayer = makeLayer (word[0], averageWeights, 10)
-        guess = outNeuron (guessLayer, averageOut)
+        if (loadWeights == "n"):
+            guessLayer = makeLayer (word[0], averageWeights, 10)
+            guess = outNeuron (guessLayer, averageOut)
+        else:
+            guessLayer = makeLayer(word[0], loadWeights, 10)
+            guess = outNeuron(guessLayer, loadOut)
         print(guess.output)
 
 # SUCCESS! NOTE, BY INCREASING THE EPOCHS OF THE NEURAL NET AND DECREASING THE AMOUNT OF ITERATIONS,
